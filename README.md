@@ -48,7 +48,8 @@ The model follows this data flow:
 The training pipeline generates metrics plots automatically. Below is an example of the training performance across 3 runs:
 ![Training Results Graph](results/images/training_metrics.png)
 - **Average Accuracy**: ~91.94%
-- **F1-Score**: ~0.93
+- **Average Loss**: ~0.22
+- **Average F1-Score**: ~0.93
 
 ## 🛠️ Installation & Usage
 
