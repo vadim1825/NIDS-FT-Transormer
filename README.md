@@ -1,76 +1,82 @@
-# FT-Transformer for Network Intrusion Detection
+# FT-Transformer for Network Intrusion Detection (NIDS)
 
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
 ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.x-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-## Project Overview
-This repository contains a TensorFlow/Keras implementation of the **FT-Transformer (Feature Tokenizer + Transformer)** architecture applied to the **UNSW-NB15** dataset for network intrusion detection.
+## 📌 Overview
 
-The project demonstrates how to adapt "Transformer" architectures (originally designed for NLP) to tabular data by treating features as tokens. It solves the problem of detecting various network attacks (Exploits, Fuzzers, Generic) against normal traffic.
+This project implements a FT-Transformer (Feature Tokenizer Transformer) architecture to detect network intrusions using the UNSW-NB15 dataset.
 
-## Model Architecture
-The model follows the standard FT-Transformer design suitable for tabular data.
+Unlike traditional machine learning models (e.g., Random Forest, XGBoost) often used for tabular data, this project leverages Deep Learning and Self-Attention mechanisms. It adapts the Transformer architecture (famous in NLP) to process heterogeneous tabular features, allowing the model to learn complex interactions between network traffic attributes.
 
-### Key Components:
+## 🚀 Key Features
 
-1.  **Feature Tokenizer:**
-    * **Categorical Features:** Processed via `Embedding` layers.
-    * **Numerical Features:** Projected via `Dense` layers with `LayerNormalization`.
-    * *Result:* Transforms heterogeneous table columns into a uniform sequence of embeddings.
+- **Deep Learning on Tabular Data**: Implements the paper "Revisiting Deep Learning Models for Tabular Data" using TensorFlow/Keras.
+- **Custom Keras Layers**: Features a custom `AddCLSToken` layer that mimics BERT's aggregation mechanism, allowing the model to gather global context into a single learnable vector.
+- **Robust Preprocessing**:
+    - SMOTE (Synthetic Minority Over-sampling Technique) to handle severe class imbalance in attack types.
+    - Feature Tokenizer: Embeds categorical variables and projects numerical variables into a unified latent space.
+- **Experiment Pipeline**: Automated training loop with 3 independent runs to ensure statistical significance of the results.
 
-2.  **[CLS] Token Mechanism:**
-    * A custom layer `AddCLSToken` appends a learnable vector to the beginning of the sequence.
-    * Similar to BERT, this token aggregates information from all other features via the Self-Attention mechanism and is used for the final classification.
+## 🧠 Model Architecture
 
-3.  **Transformer Encoder:**
-    * Uses **Multi-Head Self-Attention** to capture complex interactions between features (e.g., how *Source IP* relates to *Packet Count*).
-    * Includes Residual Connections (`Add`) and Feed-Forward Networks (FFN).
+The model follows this data flow:
 
-4.  **Preprocessing & Balancing:**
-    * **SMOTE:** Applied to handle class imbalance in the training set.
-    * **Scaling:** Numerical features are standardized using `StandardScaler`.
+1. **Input**: Heterogeneous data (numerical & categorical).
+2. **Feature Tokenizer**:
+    - Categorical features → Embedding Lookup.
+    - Numerical features → Dense Layer + LayerNorm.
+3. **[CLS] Token**: A learnable token is appended to the beginning of the sequence (implemented via custom layer).
+4. **Transformer Encoder**: *N* blocks of Multi-Head Self-Attention and Feed-Forward Networks.
+5. **Classification Head**: Extracts the [CLS] token vector and passes it through a dense layer for final Softmax prediction.
 
-## Code Structure & Implementation
+## 📂 Project Structure
+```text
+├── results/
+│   ├── images/      # Generated training plots (Loss/Accuracy)
+│   ├── logs/        # TensorBoard logs
+│   └── models/      # Saved .keras models
+├── UNSW_NB15_training_set_csv.csv  # Dataset file
+├── main.py          # Main execution script
+├── requirements.txt # Dependencies
+└── README.md        # Project documentation
+```
 
-The core logic is implemented in `ft_transformer.py`. Below is a breakdown of the custom classes:
+## 📊 Results & Visualization
 
-### `class AddCLSToken(layers.Layer)`
-Implements the initialization and appending of the class token.
-* **Role:** Acts as a global context aggregator.
-* **Logic:** Creates a trainable weight `(1, 1, embedding_dim)`, tiles it to match the batch size, and concatenates it with the input feature tokens.
+The training pipeline generates metrics plots automatically. Below is an example of the training performance across 3 runs:
 
-### `create_ft_transformer(...)`
-Builds the model graph using the Keras Functional API.
-* **Input:** Accepts separate inputs for each column.
-* **Attention:** Uses `layers.MultiHeadAttention` with `key_dim=embedding_dim // num_heads`.
-* **Regularization:** Applies `L2` regularization and `Dropout` to prevent overfitting.
-* **Output:** Extracts the `[CLS]` token (index 0) and passes it through a Dense layer for Softmax classification.
+- **Average Accuracy**: ~XX.XX% (Update this after running)
+- **F1-Score**: ~0.XX (Update this after running)
 
-## Performance
-The model is trained over 3 independent runs to ensure stability.
-* **Optimizer:** `AdamW` (with Weight Decay).
-* **Loss Function:** Categorical Crossentropy.
+## 🛠️ Installation & Usage
 
-![Training Metrics](./images/training_metrics.png)
-
-## Installation & Usage
-
-1.  **Clone the repository:**
+1. **Clone the repository**:
     ```bash
-    git clone [https://github.com/YOUR_USERNAME/FT-Transformer-NIDS.git](https://github.com/YOUR_USERNAME/FT-Transformer-NIDS.git)
-    cd FT-Transformer-NIDS
+    git clone https://github.com/your-username/your-repo-name.git
+    cd your-repo-name
     ```
 
-2.  **Install dependencies:**
+2. **Install dependencies**:
     ```bash
     pip install -r requirements.txt
     ```
 
-3.  **Run the training script:**
+3. **Download Dataset**:
+    - Download the `UNSW_NB15_training_set_csv.csv`.
+    - Place it in the root directory (or update `CONFIG["PATH"]` in `main.py`).
+
+4. **Run the training pipeline**:
     ```bash
-    python ft_transformer.py
+    python main.py
     ```
 
-## License
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 📦 Requirements
+
+- tensorflow
+- pandas
+- numpy
+- scikit-learn
+- imbalanced-learn
+- matplotlib
