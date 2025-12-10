@@ -46,15 +46,15 @@ The model follows this data flow:
 ## 📊 Results & Visualization
 
 The training pipeline generates metrics plots automatically. Below is an example of the training performance across 3 runs:
-
-- **Average Accuracy**: ~XX.XX% (Update this after running)
-- **F1-Score**: ~0.XX (Update this after running)
+![Training Results Graph](results/images/training_metrics.png)
+- **Average Accuracy**: ~91.94%
+- **F1-Score**: ~0.93
 
 ## 🛠️ Installation & Usage
 
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/your-username/your-repo-name.git
+    git clone https://github.com/vadim1825/NIDS-FT-Transformer.git
     cd your-repo-name
     ```
 
